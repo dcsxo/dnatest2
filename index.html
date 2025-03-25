@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DNA Signature Editor</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      justify-content: flex-start;
+    }
+    .sidebar {
+      width: 300px;
+      padding: 20px;
+      box-sizing: border-box;
+      background-color: #ffffff;
+      border-right: 1px solid #ddd;
+      overflow-y: auto;
+    }
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 20px;
+      color: #441d5c;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #444;
+    }
+    .form-group input[type="text"], .form-group input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      background-color: #441d5c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2e1341;
+    }
+    .preview {
+      flex-grow: 1;
+      padding: 32px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    td {
+      padding-right: 10px;
+    }
+    .swatch {
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      border-radius: 4px;
+      border: 2px solid transparent;
+    }
+    .swatch.active {
+      border: 2px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <img src="https://27b.c7b.myftpupload.com/wp-content/uploads/2025/03/dna-logo-black.png" alt="DNA Logo" style="width: 100%; max-width: 200px; margin-bottom: 20px; display: block;">
+    <h2>DNA Signature Editor</h2>
+    <div class="form-group">
+      <label for="fullName">Full Name</label>
+      <input id="fullName" type="text" placeholder="Dan Prince" />
+    </div>
+
+    <div class="form-group">
+      <label for="jobTitle">Job Title</label>
+      <input id="jobTitle" type="text" placeholder="Managing Director" />
+    </div>
+
+    <div class="form-group">
+      <label for="office">Office Number</label>
+      <input id="office" type="text" placeholder="+44(0)20 7490 9350" />
+    </div>
+
+    <div class="form-group">
+      <label for="mobile">Mobile Number</label>
+      <input id="mobile" type="text" placeholder="+44 (0)74 9818 5875" />
+    </div>
+
+    <div class="form-group">
+      <label for="profileImgUpload">Profile Banner Upload</label>
+      <input id="profileImgUpload" type="file" accept="image/*" />
+    </div>
+
+    <div class="form-group">
+      <label>Contact Label Colour</label>
+      <div id="colorSwatches" style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <div class="swatch active" data-color="#441d5c" style="background-color: #441d5c;"></div>
+        <div class="swatch" data-color="#215088" style="background-color: #215088;"></div>
+        <div class="swatch" data-color="#275d4b" style="background-color: #275d4b;"></div>
+        <div class="swatch" data-color="#5c2f8c" style="background-color: #5c2f8c;"></div>
+        <div class="swatch" data-color="#ea5b4b" style="background-color: #ea5b4b;"></div>
+        <div class="swatch" data-color="#e950a3" style="background-color: #e950a3;"></div>
+      </div>
+      <input type="hidden" id="accentColor" value="#441d5c" />
+    </div>
+
+    <button onclick="copyHTML()">Copy HTML</button>
+  </div>
+
+  <div class="preview" id="emailPreview"></div>
+
+  <script>
+    const campaignBanner = "https://27b.c7b.myftpupload.com/wp-content/uploads/2025/03/dna-sal-guide-banner2.png";
+    const fixedWebsite = "dnarecruit.com";
+    let profileImgSrc = "";
+
+    const updatePreview = () => {
+      const accentColor = document.getElementById('accentColor').value;
+      const fullName = document.getElementById('fullName').value;
+      const jobTitle = document.getElementById('jobTitle').value;
+      const office = document.getElementById('office').value;
+      const mobile = document.getElementById('mobile').value;
+
+      const html = \`
+        <div style='font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;padding:32px;'>
+          <table width="100%" style="max-width:700px;background:#fff;margin:0;">
+            <tr><td>
+              <div style="font-size:16px;padding:8px 0 4px 0">
+                Thank you,<br><br>
+                <span style="color:\${accentColor}">\${fullName}</span><br>
+                <span style="color:#808080">\${jobTitle}</span>
+              </div>
+
+              <table width="100%" style="margin:16px 0; table-layout:fixed;">
+                <tr>
+                  <td style="width:33%; word-wrap:break-word;"><b style="color:\${accentColor}">O:</b> \${office}</td>
+                  <td style="width:33%; word-wrap:break-word;"><b style="color:\${accentColor}">M:</b> \${mobile}</td>
+                  <td style="width:33%; word-wrap:break-word;"><b style="color:\${accentColor}">W:</b> \${fixedWebsite}</td>
+                </tr>
+              </table>
+
+              <div>\${profileImgSrc ? \`<img src="\${profileImgSrc}" style="width:700px;margin-bottom:10px;display:block" />\` : ''}</div>
+              <div><a href="https://www.dnarecruit.com/salary-survey" target="_blank"><img src="\${campaignBanner}" style="max-width:100%;margin-bottom:10px" /></a></div>
+
+              <div style="font-size:11px;color:#666;">
+                The information contained in this message is confidential and intended for the addressee only. If you have received this message in error please notify the originator immediately. Unauthorized use, disclosure, or copying is strictly forbidden.
+              </div>
+            </td></tr>
+          </table>
+        </div>
+      \`;
+      document.getElementById('emailPreview').innerHTML = html;
+    };
+
+    const copyHTML = () => {
+      const el = document.createElement('textarea');
+      el.value = document.getElementById('emailPreview').innerHTML;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      alert('Email HTML copied to clipboard!');
+    };
+
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+      input.addEventListener('input', updatePreview);
+    });
+
+    document.getElementById('profileImgUpload').addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          profileImgSrc = e.target.result;
+          updatePreview();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    document.querySelectorAll('.swatch').forEach(swatch => {
+      swatch.addEventListener('click', function () {
+        document.getElementById('accentColor').value = this.getAttribute('data-color');
+        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+        this.classList.add('active');
+        updatePreview();
+      });
+    });
+
+    updatePreview();
+  </script>
+</body>
+</html>
